@@ -12,6 +12,8 @@ img_artist = Image.open('../Img/Artist_Icon.png')
 img_albums = Image.open('../Img/Albun_Icon.png')
 img_playlists = Image.open('../Img/Playlists_Icon.png')
 img_play = Image.open('../Img/music_play_icon.png')
+img_loved_track = Image.open('../Img/Loved_track_Icon.png')
+img_search = Image.open('../Img/search_icon.png')
 
 
 class App(Tk):
@@ -81,12 +83,14 @@ class Player(Frame):
         fila_de_reproducao_icon: PhotoImage = ImageTk.PhotoImage(img_playlists.resize((30, 30)))
 
         img_play_icon: PhotoImage = ImageTk.PhotoImage(img_play.resize((55, 55)))
-        img_pause_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_pause_icon.png').resize((40, 40)))
+        img_pause_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_pause_icon.png').resize((55, 55)))
         img_previous_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_previous_icon.png').resize((40, 40)))
         img_next_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_next_player_track_icon.png').resize((40, 40)))
-        img_aleat_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_player_shuffle_song_icon.png').resize((40, 40)))
+        img_aleat_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_player_shuffle_song_icon.png').resize((25, 25)))
         img_repeat_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_refresh_repeat_song_icon.png').resize((40, 40)))
         img_once_repeat_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_once_refresh_repeat_icon.png').resize((40, 40)))
+        self.img_loved_track_icon: PhotoImage = ImageTk.PhotoImage(img_loved_track.resize((30, 30)))
+        self.img_no_loved_track_icon: PhotoImage = ImageTk.PhotoImage(img_favorite.resize((25, 25)))
 
         sair = Button(self, image=exit_icon, bd=0, command=lambda: parent.player.pack_forget())
         sair.imagem = exit_icon
@@ -123,13 +127,45 @@ class Player(Frame):
         self.previous_button.imagem = img_previous_icon
         self.previous_button.place(x=75, y=537)
 
+        self.order_button = Button(self, image=img_aleat_icon, bd=0)
+        self.order_button.imagem = img_aleat_icon
+        self.order_button.place(x=25,  y=544)
+
+        self.loved_button = Button(self, image=self.img_no_loved_track_icon, bd=0, command=self.loved)
+        self.loved_button.imagem = self.img_no_loved_track_icon
+        self.loved_button.place(x=275, y=544)
+
+    def loved(self):
+        if self.loved_button.imagem == self.img_loved_track_icon:
+            self.loved_button.configure(image=self.img_no_loved_track_icon)
+            self.loved_button.imagem = self.img_no_loved_track_icon
+            self.loved_button.place(x=275, y=544)
+        else:
+            self.loved_button.configure(image=self.img_loved_track_icon)
+            self.loved_button.imagem = self.img_loved_track_icon
+            self.loved_button.place(x=271, y=542)
+
 
 class StartPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
 
+        Search_area = Frame(self, borderwidth=1, relief="solid", padx=10, pady=30)
+        Search_area.pack(side="top", fill="both")
+
+        self.search = Entry(Search_area, font=fonte_padrao, width=30)
+        self.search.bind("<Return>", self.pesquisa)
+        self.search.pack(side="left")
+
+        self.search_icon: PhotoImage = ImageTk.PhotoImage(img_search.resize((20, 20)))
+        Label(Search_area, image=self.search_icon).pack(side="left")
+
         self.botao = Button(self, text="Player", command=lambda: controller.show_player())
         self.botao.pack()
+
+    def pesquisa(self, event):
+        print(f"Pesquisa: {self.search.get()}")
+        self.search.delete(0, END)
 
 
 class Page1(Frame):
