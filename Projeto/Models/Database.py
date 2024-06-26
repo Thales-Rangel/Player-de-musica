@@ -4,9 +4,9 @@ from PIL import Image
 
 class Banco:
     def __init__(self):
-        self.conect = sqlite3.connect('database.db')
+        conect = sqlite3.connect('database.db')
 
-        self.cur = self.conect.cursor()
+        self.cur = conect.cursor()
 
         self.cur.execute("""
             create table if not exists artistas(
@@ -53,8 +53,14 @@ class Banco:
 
         try:
             self.cur.execute("insert into playlists values('Favoritas')")
-            self.conect.commit()
+            conect.commit()
         except sqlite3.IntegrityError:
             print("Playlist de favoritas já criada!")
 
-        self.conect.close()
+        conect.close()
+
+    @classmethod
+    def conect(cls):
+        Banco()
+        conexao = sqlite3.connect('database.db')
+        return conexao
