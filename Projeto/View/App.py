@@ -1,5 +1,6 @@
 from GUIs import *
 
+
 def centralizar_janela(janela):
     janela.update_idletasks()
 

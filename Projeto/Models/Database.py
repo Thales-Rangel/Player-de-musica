@@ -1,5 +1,4 @@
 import sqlite3
-from PIL import Image
 
 
 class Banco:
