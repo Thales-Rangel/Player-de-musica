@@ -66,3 +66,21 @@ class Artist:
                 con.commit()
 
         con.close()
+
+
+class Playlist:
+    def __init__(self, name):
+        con = Banco.conect()
+        cur = con.cursor()
+
+        res = cur.execute(f"select * from playlists where nome = '{name}'")
+
+        for line in res:
+            self.nome = line[0]
+
+        self.musicas = []
+        res = cur.execute(f"select musica from na_playlist where playlist = '{name}'")
+        for line in res:
+            self.musicas.append(Music(line[0]))
+
+        con.close()
