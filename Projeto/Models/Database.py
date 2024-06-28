@@ -5,23 +5,23 @@ class Banco:
     def __init__(self):
         conect = sqlite3.connect('database.db')
 
-        self.cur = conect.cursor()
+        cur = conect.cursor()
 
-        self.cur.execute("""
+        cur.execute("""
             create table if not exists artistas(
                 nome text primary key,
                 foto blob
             )
         """)
 
-        self.cur.execute("""
+        cur.execute("""
             create table if not exists albuns(
                 nome text primary key,
                 foto blob
             )
         """)
 
-        self.cur.execute("""
+        cur.execute("""
             create table if not exists musicas(
                 nome text primary key,
                 minutos int,
@@ -34,13 +34,13 @@ class Banco:
             )
         """)
 
-        self.cur.execute("""
+        cur.execute("""
             create table if not exists playlists(
                 nome text primary key
             )
         """)
 
-        self.cur.execute("""
+        cur.execute("""
             create table if not exists na_playlist(
                 id integer primary key autoincrement,
                 musica text,
@@ -51,11 +51,16 @@ class Banco:
         """)
 
         try:
-            self.cur.execute("insert into playlists values('Favoritas')")
-            conect.commit()
+            cur.execute("insert into playlists values('Favoritas')")
         except sqlite3.IntegrityError:
             print("Playlist de favoritas já criada!")
 
+        try:
+            cur.execute("insert into artistas (nome) values ('Desconhecido')")
+        except sqlite3.IntegrityError:
+            print("Artista desconhecido já criado!")
+
+        conect.commit()
         conect.close()
 
     @classmethod

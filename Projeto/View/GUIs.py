@@ -173,6 +173,13 @@ class StartPage(Frame):
         self.search.delete(0, END)
 
 
+class card(Frame):
+    def __init__(self, musica):
+        Frame.__init__(self, width=50)
+
+        capa = ImageTk.PhotoImage(musica.album.foto)
+
+
 class Page1(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, background='red')

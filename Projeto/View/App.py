@@ -1,4 +1,10 @@
 from GUIs import *
+import os
+from mutagen.mp3 import MP3
+from Projeto.Models.Database import *
+
+# O caminho será dado pelo usuário
+caminho_das_musicas = ""
 
 
 def centralizar_janela(janela):
@@ -14,10 +20,49 @@ def centralizar_janela(janela):
     janela.deiconify()
 
 
+def register_musics(caminho):
+    con = Banco.conect()
+    cur = con.cursor()
+
+    os.chdir(caminho)
+    musics = os.listdir()
+
+    for line in musics:
+        name = os.path.splitext(line)[0]
+        extension = os.path.splitext(line)[1]
+
+        if extension == '.mp3':
+            length = MP3(line).info.length
+
+            sql_command = "insert into musicas values (?, ?, ?, ?, ?, ?)"
+            try:
+                cur.execute("insert into albuns (nome) values (?)", (name,))
+            except sqlite3.IntegrityError:
+                print(f'Album {name} já criado')
+
+            try:
+                cur.execute(sql_command,
+                            (name, length // 60, length % 60, name, "Desconhecido", os.path.abspath(line),))
+            except sqlite3.IntegrityError:
+                print(f"Música {name} já criada")
+
+            con.commit()
+    con.close()
+
 app = App()
 app.title("Player de Música")
 app.geometry("1200x720")
 
 centralizar_janela(app)
 
+register_musics(caminho_das_musicas)
+
 app.mainloop()
+
+os.chdir(caminho_das_musicas)
+musicas = os.listdir()
+
+for line in musicas:
+    if os.path.splitext(line)[1] == '.mp3':
+        print(line)
+        print(os.path.abspath(line))
