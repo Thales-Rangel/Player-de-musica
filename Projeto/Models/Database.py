@@ -3,7 +3,7 @@ import sqlite3
 
 class Banco:
     def __init__(self):
-        conect = sqlite3.connect('database.db')
+        conect = sqlite3.connect('../database.db')
 
         cur = conect.cursor()
 
@@ -28,7 +28,7 @@ class Banco:
                 segundos int,
                 album text,
                 artista text,
-                caminho text,
+                caminho text unique,
                 foreign key (album) references albuns(nome),
                 foreign key (artista) references artistas(nome)
             )
@@ -66,5 +66,5 @@ class Banco:
     @classmethod
     def conect(cls):
         Banco()
-        conexao = sqlite3.connect('database.db')
+        conexao = sqlite3.connect('../database.db')
         return conexao
