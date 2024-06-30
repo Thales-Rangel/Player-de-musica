@@ -24,6 +24,9 @@ class Music:
             self.album = Album(line[3])
             self.artista = Artist(line[4])
             self.caminho = line[5]
+            print(line)
+
+        print(f'Música: {self.nome} - {self.tempo} - {self.album.nome} - {self.artista.nome} - {self.caminho}')
 
         con.close()
 
@@ -40,9 +43,9 @@ class Album:
             try:
                 self.foto = Image.open(io.BytesIO(line[1]))
             except PIL.UnidentifiedImageError:
-                self.foto = Image.open('../Img/Icone_Music.png')
+                self.foto = Image.open('Img/Icone_Music.png')
                 cur.execute("update albuns set foto = ? where nome = ?",
-                            (convert_to_binary('../Img/Icone_Music.png'), name,))
+                            (convert_to_binary('Img/Icone_Music.png'), name,))
                 con.commit()
 
         con.close()
@@ -60,9 +63,9 @@ class Artist:
             try:
                 self.foto = Image.open(io.BytesIO(line[1]))
             except PIL.UnidentifiedImageError:
-                self.foto = Image.open('../Img/Default_Image_Artist.jpg')
+                self.foto = Image.open('Img/Default_Image_Artist.jpg')
                 cur.execute("update artistas set foto = ? where nome = ?",
-                            (convert_to_binary('../Img/Default_Image_Artist.jpg'), name,))
+                            (convert_to_binary('Img/Default_Image_Artist.jpg'), name,))
                 con.commit()
 
         con.close()

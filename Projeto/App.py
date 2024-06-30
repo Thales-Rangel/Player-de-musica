@@ -3,7 +3,8 @@ import mutagen.mp3
 from GUIs import *
 import os
 from mutagen.mp3 import MP3
-from Projeto.Models.Database import *
+from Database import *
+from Models import *
 
 # O caminho será dado pelo usuário
 caminho_das_musicas = "C:/Users/thale/OneDrive/Music"
@@ -55,12 +56,14 @@ def register_musics(caminho):
             con.commit()
     con.close()
 
+
+#register_musics(caminho_das_musicas)
+
+
 app = App()
 app.title("Player de Música")
 app.geometry("1200x720")
 
 centralizar_janela(app)
-
-register_musics(caminho_das_musicas)
 
 app.mainloop()

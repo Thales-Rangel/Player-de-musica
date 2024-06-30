@@ -1,19 +1,21 @@
 from tkinter import *
 from tkinter import ttk as ttk
-from PIL import Image, ImageTk
+from PIL import ImageTk
 from PIL.ImageTk import PhotoImage
+
+from Models import *
 
 fonte_padrao = ("verdana", 12)
 
 # Carregando as imagens
-img_home = Image.open('../Img/Home_Icon.png')
-img_favorite = Image.open('../Img/Favorite_Icon.png')
-img_artist = Image.open('../Img/Artist_Icon.png')
-img_albums = Image.open('../Img/Albun_Icon.png')
-img_playlists = Image.open('../Img/Playlists_Icon.png')
-img_play = Image.open('../Img/music_play_icon.png')
-img_loved_track = Image.open('../Img/Loved_track_Icon.png')
-img_search = Image.open('../Img/search_icon.png')
+img_home = Image.open('Img/Home_Icon.png')
+img_favorite = Image.open('Img/Favorite_Icon.png')
+img_artist = Image.open('Img/Artist_Icon.png')
+img_albums = Image.open('Img/Albun_Icon.png')
+img_playlists = Image.open('Img/Playlists_Icon.png')
+img_play = Image.open('Img/music_play_icon.png')
+img_loved_track = Image.open('Img/Loved_track_Icon.png')
+img_search = Image.open('Img/search_icon.png')
 
 
 class App(Tk):
@@ -78,22 +80,22 @@ class Player(Frame):
         Frame.__init__(self, parent, width=325, borderwidth=1, relief="solid")
 
         #Carregar as imagens
-        exit_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/Exit_icon.png').resize((20, 20)))
-        more_options_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/more-options-icon.png').resize((40, 40)))
+        exit_icon: PhotoImage = ImageTk.PhotoImage(Image.open('Img/Exit_icon.png').resize((20, 20)))
+        more_options_icon: PhotoImage = ImageTk.PhotoImage(Image.open('Img/more-options-icon.png').resize((40, 40)))
         fila_de_reproducao_icon: PhotoImage = ImageTk.PhotoImage(img_playlists.resize((30, 30)))
 
         img_play_icon: PhotoImage = ImageTk.PhotoImage(img_play.resize((55, 55)))
-        img_pause_icon: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/music_pause_icon.png').resize((55, 55)))
+        img_pause_icon: PhotoImage = ImageTk.PhotoImage(Image.open('Img/music_pause_icon.png').resize((55, 55)))
         img_previous_icon: PhotoImage = ImageTk.PhotoImage(
-            Image.open('../Img/music_previous_icon.png').resize((40, 40)))
+            Image.open('Img/music_previous_icon.png').resize((40, 40)))
         img_next_icon: PhotoImage = ImageTk.PhotoImage(
-            Image.open('../Img/music_next_player_track_icon.png').resize((40, 40)))
+            Image.open('Img/music_next_player_track_icon.png').resize((40, 40)))
         img_aleat_icon: PhotoImage = ImageTk.PhotoImage(
-            Image.open('../Img/music_player_shuffle_song_icon.png').resize((25, 25)))
+            Image.open('Img/music_player_shuffle_song_icon.png').resize((25, 25)))
         img_repeat_icon: PhotoImage = ImageTk.PhotoImage(
-            Image.open('../Img/music_refresh_repeat_song_icon.png').resize((40, 40)))
+            Image.open('Img/music_refresh_repeat_song_icon.png').resize((40, 40)))
         img_once_repeat_icon: PhotoImage = ImageTk.PhotoImage(
-            Image.open('../Img/music_once_refresh_repeat_icon.png').resize((40, 40)))
+            Image.open('Img/music_once_refresh_repeat_icon.png').resize((40, 40)))
         self.img_loved_track_icon: PhotoImage = ImageTk.PhotoImage(img_loved_track.resize((30, 30)))
         self.img_no_loved_track_icon: PhotoImage = ImageTk.PhotoImage(img_favorite.resize((25, 25)))
 
@@ -101,7 +103,7 @@ class Player(Frame):
         sair.imagem = exit_icon
         sair.place(x=270, y=15)
 
-        self.imagem: PhotoImage = ImageTk.PhotoImage(Image.open('../Img/Icone_Music.png').resize((265, 265)))
+        self.imagem: PhotoImage = ImageTk.PhotoImage(Image.open('Img/Icone_Music.png').resize((265, 265)))
 
         self.icone = Label(self, image=self.imagem, borderwidth=1, relief="solid")
         self.icone.place(x=30, y=60)
@@ -168,16 +170,29 @@ class StartPage(Frame):
         self.botao = Button(self, text="Player", command=lambda: controller.show_player())
         self.botao.pack()
 
+        container = Frame(self)
+        container.pack(side="left", fill="both", expand=True)
+
+        musica_teste = Music("Music Name")
+
+        card_test = Card(container, musica_teste)
+        card_test.pack(side="left")
+
     def pesquisa(self, event):
         print(f"Pesquisa: {self.search.get()}")
         self.search.delete(0, END)
 
 
-class card(Frame):
-    def __init__(self, musica):
-        Frame.__init__(self, width=50)
+class Card(Frame):
+    def __init__(self, parent, musica):
+        Frame.__init__(self, parent, width=50)
 
-        capa = ImageTk.PhotoImage(musica.album.foto)
+        capa = ImageTk.PhotoImage(musica.album.foto.resize((50, 50)))
+
+        Label(self, image=capa).pack(side="top")
+
+        play = Button(self, image=ImageTk.PhotoImage(img_play.resize((10, 10))))
+        play.pack(side="bottom")
 
 
 class Page1(Frame):
