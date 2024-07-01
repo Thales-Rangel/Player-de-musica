@@ -12,8 +12,7 @@ def convert_to_binary(caminho):
 
 
 class Music:
-    def __init__(self, name):
-        con = Banco.conect()
+    def __init__(self, name, con):
         cur = con.cursor()
 
         res = cur.execute(f"select * from musicas where nome = '{name}'")
@@ -21,19 +20,13 @@ class Music:
         for line in res:
             self.nome = name
             self.tempo = (line[1], line[2])
-            self.album = Album(line[3])
-            self.artista = Artist(line[4])
+            self.album = Album(line[3], con)
+            self.artista = Artist(line[4], con)
             self.caminho = line[5]
-            print(line)
-
-        print(f'Música: {self.nome} - {self.tempo} - {self.album.nome} - {self.artista.nome} - {self.caminho}')
-
-        con.close()
 
 
 class Album:
-    def __init__(self, name):
-        con = Banco.conect()
+    def __init__(self, name, con):
         cur = con.cursor()
 
         res = cur.execute(f"select * from albuns where nome = '{name}'")
@@ -48,12 +41,9 @@ class Album:
                             (convert_to_binary('Img/Icone_Music.png'), name,))
                 con.commit()
 
-        con.close()
-
 
 class Artist:
-    def __init__(self, name):
-        con = Banco.conect()
+    def __init__(self, name, con):
         cur = con.cursor()
 
         res = cur.execute(f"select * from artistas where nome = '{name}'")
@@ -68,7 +58,6 @@ class Artist:
                             (convert_to_binary('Img/Default_Image_Artist.jpg'), name,))
                 con.commit()
 
-        con.close()
 
 
 class Playlist:

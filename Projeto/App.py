@@ -7,8 +7,10 @@ from Database import *
 from Models import *
 
 # O caminho será dado pelo usuário
-caminho_das_musicas = "C:/Users/thale/OneDrive/Music"
+caminho_das_musicas = ""
 
+# Variavel que armazena o caminho absoluto do projeto
+caminho_projeto = os.path.abspath('')
 
 def centralizar_janela(janela):
     janela.update_idletasks()
@@ -27,7 +29,10 @@ def register_musics(caminho):
     con = Banco.conect()
     cur = con.cursor()
 
+    # Esse comando altera o diretório de trabalho atual do programa para o expecificado no parametro
     os.chdir(caminho)
+    #-------
+
     musics = os.listdir()
 
     for line in musics:
@@ -57,12 +62,14 @@ def register_musics(caminho):
     con.close()
 
 
-#register_musics(caminho_das_musicas)
+register_musics(caminho_das_musicas)
 
+# Após o comando register_musics alterar o diretório atual de trabalho para o caminho especificado das músicas
+# Ele retorna ao diretório do projeto para os imports de imagens das classes em GUIs poderem funcionar
+# Estava dando erro pois as classes em GUI estavam tentando buscar imagens em um diretório diferente da pasta Img
+os.chdir(os.path.abspath(caminho_projeto))
 
 app = App()
-app.title("Player de Música")
-app.geometry("1200x720")
 
 centralizar_janela(app)
 

@@ -21,6 +21,8 @@ img_search = Image.open('Img/search_icon.png')
 class App(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
+        self.title("Player de Música")
+        self.geometry("1200x720")
 
         nav = Frame(self, width=90, borderwidth=1, relief="solid")
         nav.pack(side="left", fill='both')
@@ -170,13 +172,34 @@ class StartPage(Frame):
         self.botao = Button(self, text="Player", command=lambda: controller.show_player())
         self.botao.pack()
 
-        container = Frame(self)
-        container.pack(side="left", fill="both", expand=True)
+        self.container = Frame(self, borderwidth=2, relief='solid')
+        self.container.pack(side="left", fill="both", expand=True)
 
-        musica_teste = Music("Music Name")
+        for i in range(5):
+            self.container.grid_columnconfigure(i, weight=1, minsize=120)
 
-        card_test = Card(container, musica_teste)
-        card_test.pack(side="left")
+        self.cards = []
+        self.create_cards()
+
+        coluna = 0
+        linha = 0
+        for card in self.cards:
+            card.grid(sticky='nsew', column=coluna, row=linha, pady=5, padx=5)
+            if coluna < 4:
+                coluna = coluna+1
+            else:
+                coluna = 0
+                linha = linha+1
+
+    def create_cards(self):
+        con = Banco.conect()
+        cur = con.cursor()
+
+        res = cur.execute("select * from musicas")
+
+        for line in res:
+            self.cards.append((Card(self.container, Music(line[0], con))))
+        con.close()
 
     def pesquisa(self, event):
         print(f"Pesquisa: {self.search.get()}")
@@ -185,13 +208,17 @@ class StartPage(Frame):
 
 class Card(Frame):
     def __init__(self, parent, musica):
-        Frame.__init__(self, parent, width=50)
+        Frame.__init__(self, parent, borderwidth=2, relief='solid')
 
-        capa = ImageTk.PhotoImage(musica.album.foto.resize((50, 50)))
+        capa: PhotoImage = ImageTk.PhotoImage(musica.album.foto.resize((120, 120)))
+        icon_play = ImageTk.PhotoImage(img_play.resize((30, 30)))
 
-        Label(self, image=capa).pack(side="top")
+        capa_album = Label(self, image=capa)
+        capa_album.imagem = capa
+        capa_album.pack(side="top")
 
-        play = Button(self, image=ImageTk.PhotoImage(img_play.resize((10, 10))))
+        play = Button(self, image=icon_play)
+        play.imagem = icon_play
         play.pack(side="bottom")
 
 
