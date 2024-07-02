@@ -27,7 +27,7 @@ class App(Tk):
         nav = Frame(self, width=90, borderwidth=1, relief="solid")
         nav.pack(side="left", fill='both')
 
-        #Carregado os icones para os botoes da NavBar
+        # Carregado os icones para os botoes da NavBar
         img_home_icon: PhotoImage = ImageTk.PhotoImage(img_home.resize((40, 40)))
         img_favorite_icon: PhotoImage = ImageTk.PhotoImage(img_favorite.resize((40, 40)))
         img_artist_icon: PhotoImage = ImageTk.PhotoImage(img_artist.resize((40, 40)))
@@ -81,7 +81,7 @@ class Player(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent, width=325, borderwidth=1, relief="solid")
 
-        #Carregar as imagens
+        # Carregar as imagens
         exit_icon: PhotoImage = ImageTk.PhotoImage(Image.open('Img/Exit_icon.png').resize((20, 20)))
         more_options_icon: PhotoImage = ImageTk.PhotoImage(Image.open('Img/more-options-icon.png').resize((40, 40)))
         fila_de_reproducao_icon: PhotoImage = ImageTk.PhotoImage(img_playlists.resize((30, 30)))
@@ -202,6 +202,8 @@ class StartPage(Frame):
         for card in self.cards:
             card.grid(sticky='nsew', column=coluna, row=linha, pady=5, padx=5)
             if coluna < 4:
+                # Se houver outra forma de fazer esse comando, por favor trocar (ps: coluna++ não funcionou nos meus
+                # testes)
                 coluna = coluna+1
             else:
                 coluna = 0
@@ -227,11 +229,21 @@ class Card(Frame):
         Frame.__init__(self, parent, borderwidth=2, relief='solid')
 
         capa: PhotoImage = ImageTk.PhotoImage(musica.album.foto.resize((133, 133)))
-        icon_play = ImageTk.PhotoImage(img_play.resize((30, 30)))
+        icon_play: PhotoImage = ImageTk.PhotoImage(img_play.resize((30, 30)))
 
         capa_album = Label(self, image=capa)
         capa_album.imagem = capa
         capa_album.pack(side="top")
+
+        label_name = Label(self, font=("verdana", 7))
+        for i in range(len(musica.nome)):
+            if i < 19:
+                # Se tiver outra forma de fazer esse comando aqui, por favor trocar
+                label_name["text"] = label_name["text"] + musica.nome[i]
+            else:
+                label_name["text"] = label_name["text"] + "..."
+                break
+        label_name.pack(side="top")
 
         play = Button(self, image=icon_play)
         play.imagem = icon_play
