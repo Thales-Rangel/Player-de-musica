@@ -12,6 +12,7 @@ caminho_das_musicas = ""
 # Variavel que armazena o caminho absoluto do projeto
 caminho_projeto = os.path.abspath('')
 
+
 def centralizar_janela(janela):
     janela.update_idletasks()
 
@@ -31,8 +32,7 @@ def register_musics(caminho):
 
     # Esse comando altera o diretório de trabalho atual do programa para o expecificado no parametro
     os.chdir(caminho)
-    #-------
-
+    # -------
     musics = os.listdir()
 
     for line in musics:

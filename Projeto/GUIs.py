@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk as ttk
+from tkinter import ttk
 from PIL import ImageTk
 from PIL.ImageTk import PhotoImage
 
@@ -172,11 +172,27 @@ class StartPage(Frame):
         self.botao = Button(self, text="Player", command=lambda: controller.show_player())
         self.botao.pack()
 
-        self.container = Frame(self, borderwidth=2, relief='solid')
-        self.container.pack(side="left", fill="both", expand=True)
+        container = Frame(self)
+        container.grid_columnconfigure(0, weight=1)
+        container.pack(side="left", fill="both", expand=True)
+
+        canvas = Canvas(container)
+
+        s = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+
+        self.list_cards = Frame(canvas, borderwidth=2, relief='solid')
+        self.list_cards.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+        self.list_cards.pack(fill="both", expand=True)
+        canvas.create_window((0, 0), window=self.list_cards, anchor="nw")
+
+        canvas.configure(yscrollcommand=s.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        s.pack(side="right", fill="y")
 
         for i in range(5):
-            self.container.grid_columnconfigure(i, weight=1, minsize=120)
+            self.list_cards.grid_columnconfigure(i, weight=1)
 
         self.cards = []
         self.create_cards()
@@ -198,7 +214,7 @@ class StartPage(Frame):
         res = cur.execute("select * from musicas")
 
         for line in res:
-            self.cards.append((Card(self.container, Music(line[0], con))))
+            self.cards.append((Card(self.list_cards, Music(line[0], con))))
         con.close()
 
     def pesquisa(self, event):
@@ -210,7 +226,7 @@ class Card(Frame):
     def __init__(self, parent, musica):
         Frame.__init__(self, parent, borderwidth=2, relief='solid')
 
-        capa: PhotoImage = ImageTk.PhotoImage(musica.album.foto.resize((120, 120)))
+        capa: PhotoImage = ImageTk.PhotoImage(musica.album.foto.resize((133, 133)))
         icon_play = ImageTk.PhotoImage(img_play.resize((30, 30)))
 
         capa_album = Label(self, image=capa)
