@@ -73,8 +73,13 @@ class App(Tk):
         frame = self.frames[count]
         frame.tkraise()
 
-    def show_player(self):
-        self.player.pack(side="right", fill="both")
+    def show_player(self, view):
+        if view:
+            self.player.pack(side="right", fill="both")
+            self.frames[StartPage].scale_cards(5)
+        else:
+            self.player.pack_forget()
+            self.frames[StartPage].scale_cards(7)
 
 
 class Player(Frame):
@@ -101,7 +106,7 @@ class Player(Frame):
         self.img_loved_track_icon: PhotoImage = ImageTk.PhotoImage(img_loved_track.resize((30, 30)))
         self.img_no_loved_track_icon: PhotoImage = ImageTk.PhotoImage(img_favorite.resize((25, 25)))
 
-        sair = Button(self, image=exit_icon, bd=0, command=lambda: parent.player.pack_forget())
+        sair = Button(self, image=exit_icon, bd=0, command=lambda: parent.show_player(False))
         sair.imagem = exit_icon
         sair.place(x=270, y=15)
 
@@ -169,7 +174,7 @@ class StartPage(Frame):
         self.search_icon: PhotoImage = ImageTk.PhotoImage(img_search.resize((20, 20)))
         Label(search_area, image=self.search_icon).pack(side="left")
 
-        self.botao = Button(self, text="Player", command=lambda: controller.show_player())
+        self.botao = Button(self, text="Player", command=lambda: controller.show_player(True))
         self.botao.pack()
 
         container = Frame(self)
@@ -191,19 +196,23 @@ class StartPage(Frame):
         canvas.pack(side="left", fill="both", expand=True)
         s.pack(side="right", fill="y")
 
-        for i in range(5):
-            self.list_cards.grid_columnconfigure(i, weight=1)
-
         self.cards = []
         self.create_cards()
+
+        self.scale_cards(7)
+
+
+    def scale_cards(self, columns):
+        for i in range(columns):
+            self.grid_columnconfigure(i, weight=1)
 
         coluna = 0
         linha = 0
         for card in self.cards:
-            card.grid(sticky='nsew', column=coluna, row=linha, pady=5, padx=5)
-            if coluna < 4:
-                # Se houver outra forma de fazer esse comando, por favor trocar (ps: coluna++ não funcionou nos meus
-                # testes)
+            card.grid_forget()
+            card.grid(sticky='nswe', column=coluna, row=linha, pady=5, padx=5)
+
+            if coluna < columns-1:
                 coluna = coluna+1
             else:
                 coluna = 0
